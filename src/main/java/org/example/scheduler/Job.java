@@ -1,0 +1,57 @@
+package org.example.scheduler;
+
+import lombok.Getter;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+
+/**
+ * Defines a executable task definition.
+ * Must be subclassed to define functionality.
+ * @param <PARAMS> input type
+ * @param <DATA> output tyoe
+ */
+@Getter
+public abstract class Job<PARAMS, DATA> {
+    protected final List<Run> runs = new ArrayList<>();
+    protected final RunExecutor<DATA> executor;
+    protected int runNumber = 0;
+
+    public Job() {
+        executor = new RunExecutor<>();
+    }
+
+    /**
+     * Schedules an execution of the task.
+     * @param params input params
+     * @return future with result data
+     */
+    public final CompletableFuture<RunResult<DATA>> submit(PARAMS params) {
+        String runId = this.getClass().getCanonicalName() + "-" + (++runNumber);
+        Run<PARAMS, DATA> run = new Run<PARAMS, DATA>(runId, params) {
+            @Override
+            public DATA execute() throws Exception {
+                return Job.this.execute(getEnvironment(), getParams());
+            }
+        };
+        runs.add(run);
+        return run.schedule(executor);
+    }
+
+    /**
+     * Task implementation.
+     * This function is called with the exeturor worker thread.
+     * @param params input params
+     * @return result data
+     * @throws Exception allow any exception
+     */
+    protected abstract DATA execute(RunEnvironment env, PARAMS params) throws Exception;
+
+    /**
+     * Shuts down task execution and waits for competition.
+     */
+    public void waitFor() {
+        executor.waitFor();
+    }
+}
