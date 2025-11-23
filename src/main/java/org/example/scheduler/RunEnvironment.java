@@ -1,5 +1,6 @@
 package org.example.scheduler;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.slf4j.Logger;
 
 import java.io.BufferedReader;
@@ -9,8 +10,11 @@ import java.io.StringWriter;
 import java.util.List;
 
 public class RunEnvironment {
+    @JsonIgnore
     public final PrintWriter out;
+    @JsonIgnore
     public final Logger log;
+    @JsonIgnore
     private final StringWriter outBuffer = new StringWriter();
 
     public RunEnvironment() {
@@ -18,6 +22,7 @@ public class RunEnvironment {
         log = new RunLogger(out);
     }
 
+    @JsonIgnore
     public String getOutText() {
         return outBuffer.toString();
     }

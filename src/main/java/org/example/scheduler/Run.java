@@ -32,7 +32,7 @@ public abstract class Run<PARAMS, DATA> {
     private String message;
 
     @Getter
-    private RunEnvironment environment = new RunEnvironment();
+    private final RunEnvironment environment = new RunEnvironment();
 
 
     protected Run(String id, PARAMS params) {

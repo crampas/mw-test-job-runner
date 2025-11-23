@@ -1,6 +1,7 @@
 package org.example.scheduler;
 
 import lombok.Getter;
+import tools.jackson.core.type.TypeReference;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,12 +23,34 @@ public abstract class Job<PARAMS, DATA> {
         executor = new RunExecutor<>();
     }
 
+    public String getName() {
+        return getClass().getCanonicalName();
+    }
+
+    public abstract TypeReference<PARAMS> getParamsTypeReference();
+
+    /**
+     * Schedules an execution of the task.
+     * @param params input params
+     * @return the RUn object controlling the execution
+     */
+    public final Run<PARAMS, DATA> submitRun(PARAMS params) {
+        Run<PARAMS, DATA> run = createRun(params);
+        run.schedule(executor);
+        return run;
+    }
+
     /**
      * Schedules an execution of the task.
      * @param params input params
      * @return future with result data
      */
     public final CompletableFuture<RunResult<DATA>> submit(PARAMS params) {
+        Run<PARAMS, DATA> run = createRun(params);
+        return run.schedule(executor);
+    }
+
+    public final Run<PARAMS, DATA> createRun(PARAMS params) {
         String runId = this.getClass().getCanonicalName() + "-" + (++runNumber);
         Run<PARAMS, DATA> run = new Run<>(runId, params) {
             @Override
@@ -36,7 +59,7 @@ public abstract class Job<PARAMS, DATA> {
             }
         };
         runs.add(run);
-        return run.schedule(executor);
+        return run;
     }
 
     /**

@@ -4,12 +4,17 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.scheduler.Job;
 import org.example.scheduler.RunEnvironment;
 import org.example.scheduler.RunFailedException;
+import tools.jackson.core.type.TypeReference;
 
 import java.io.IOException;
 
 @Slf4j
 public class JMeterTestJob extends Job<JMeterTestParams, JMeterTestData> {
     public JMeterTestJob() {
+    }
+
+    public TypeReference<JMeterTestParams> getParamsTypeReference() {
+        return new TypeReference<>() {};
     }
 
     protected JMeterTestData execute(RunEnvironment env, JMeterTestParams params) throws IOException, InterruptedException {
