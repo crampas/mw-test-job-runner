@@ -1,6 +1,8 @@
 package org.example.scheduler;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
+import org.apache.commons.lang3.StringUtils;
 import tools.jackson.core.type.TypeReference;
 
 import java.util.ArrayList;
@@ -16,6 +18,7 @@ import java.util.concurrent.CompletableFuture;
 @Getter
 public abstract class Job<PARAMS, DATA> {
     protected final List<Run<PARAMS, DATA>> runs = new ArrayList<>();
+    @JsonIgnore
     protected final RunExecutor<DATA> executor;
     protected int runNumber = 0;
 
@@ -24,9 +27,10 @@ public abstract class Job<PARAMS, DATA> {
     }
 
     public String getName() {
-        return getClass().getCanonicalName();
+        return StringUtils.substringAfterLast(getClass().getCanonicalName(), ".");
     }
 
+    @JsonIgnore
     public abstract TypeReference<PARAMS> getParamsTypeReference();
 
     /**
@@ -50,8 +54,8 @@ public abstract class Job<PARAMS, DATA> {
         return run.schedule(executor);
     }
 
-    public final Run<PARAMS, DATA> createRun(PARAMS params) {
-        String runId = this.getClass().getCanonicalName() + "-" + (++runNumber);
+    private Run<PARAMS, DATA> createRun(PARAMS params) {
+        String runId = getName() + "-" + (++runNumber);
         Run<PARAMS, DATA> run = new Run<>(runId, params) {
             @Override
             public DATA execute() throws Exception {

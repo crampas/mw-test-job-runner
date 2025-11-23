@@ -63,7 +63,7 @@ public class SchedulerRestController {
         Run run = job.submitRun(params);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Location", "/api/job/%s/run/%s".formatted(jobName, run.getId()));
+        headers.add("Location", "/log.html?jobName=%s&runId=%s".formatted(jobName, run.getId()));
         return new ResponseEntity(headers, HttpStatus.FOUND);
     }
 

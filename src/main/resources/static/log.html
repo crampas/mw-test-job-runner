@@ -15,21 +15,36 @@
 </head>
 <body>
 <div class="container">
-
-    <h1>org.example.jmeter.JMeterTestJob</h1>
+    <h1><span id="jobName"></span> / <span id="runId"></span></h1>
+    <div><span id="run.state">UNKNOWN</span> <span id="run.message"></span></div>
     <h2>Log</h2>
-    <div class="log-line">Test Test</div>
-
-    <div id="log">
-
+    <div id="error">
     </div>
-
+    <div id="log">
+    </div>
 </div>
 
+<script src="/js/log-updater.js"></script>
 <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    console.log("params", urlParams);
+    const jobName = urlParams.get("jobName");
+    const runId = urlParams.get("runId");
+
+    document.getElementById("jobName").innerHTML = jobName;
+    document.getElementById("runId").innerHTML = runId;
+    startLogUpdater({jobName, runId, errorElementId: "error", logElementId: "log"});
+
+    const updateRun = (async () => {
+        setTimeout(async () => updateRun(), 1000);
+        const run = await fetchRun({jobName, runId})
+        document.getElementById("run.state").innerHTML = run.state;
+        document.getElementById("run.message").innerHTML = run.message;
+    });
+    updateRun();
 
 </script>
-<script src="/log-updater.js"></script>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
 </body>
 </html>
