@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="*">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bootstrap demo</title>
+    <link href="/assets/bootstrap/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/jobs.html">Jobs</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{{job.name}}</li>
+      </ol>
+    </nav>
+
+    <h1>Job {{job.name}}</h1>
+    <div>
+        <a class="btn btn-primary btn-sm" href="/{{job.name}}/start.html" role="button">New run ...</a>
+    </div>
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Run</th>
+      <th scope="col">State</th>
+      <th scope="col">Result</th>
+      <th scope="col">Started</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each job.runs}}
+    <tr>
+      <td><a href="/job/{{@../job.name}}/run/{{id}}.html">{{id}}</a></td>
+      <td>{{state}}</td>
+      <td>{{resultState}}</td>
+      <td>{{startTimestamp}}</td>
+    </tr>
+    {{/each}}
+  </tbody>
+</table>
+
+
+
+
+</div>
+
+<script src="/assets/bootstrap/bootstrap.bundle.min.js"></script>
+</body>
+</html>

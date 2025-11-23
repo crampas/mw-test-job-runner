@@ -49,24 +49,6 @@ public class SchedulerRestController {
                 .orElse(ApiResponse.ofError("not found"));
     }
 
-    @PostMapping("/api/job/{jobName}/start.html")
-    public ResponseEntity startJobRunByForm(@PathVariable String jobName,
-                                                  @RequestParam Map<String, String> queryParams) {
-        JsonNode jsonParams = new ObjectMapper().convertValue(queryParams, JsonNode.class);
-        Job job = schedulerService.getJobByName(jobName).orElse(null);
-        if (job == null) {
-            return ResponseEntity.notFound().build();
-        }
-
-        Object params = new ObjectMapper().treeToValue(jsonParams, job.getParamsTypeReference());
-        log.info("startJobRun with params {}", params);
-        Run run = job.submitRun(params);
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Location", "/log.html?jobName=%s&runId=%s".formatted(jobName, run.getId()));
-        return new ResponseEntity(headers, HttpStatus.FOUND);
-    }
-
     @GetMapping("/api/job/{jobName}/run/{runId}")
     public ApiResponse<Run> getRun(@PathVariable String jobName,
                                            @PathVariable String runId) {

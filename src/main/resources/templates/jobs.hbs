@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="*">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bootstrap demo</title>
+    <link href="/assets/bootstrap/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item active" aria-current="page">Jobs</li>
+      </ol>
+    </nav>
+
+    <h1>Jobs {{test}}</h1>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Name</th>
+      <th scope="col">Runs</th>
+      <th scope="col">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each jobs}}
+    <tr>
+      <td><a href="/job/{{name}}.html">{{name}}</a></td>
+      <td>{{runNumber}}</td>
+      <td><a href="/{{name}}/start.html">Start</a></td>
+    </tr>
+    {{/each}}
+  </tbody>
+</table>
+
+
+
+
+</div>
+
+<script src="/assets/bootstrap/bootstrap.bundle.min.js"></script>
+</body>
+</html>
