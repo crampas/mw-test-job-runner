@@ -11,7 +11,7 @@ import java.util.List;
 public class RunEnvironment {
     public final PrintWriter out;
     public final Logger log;
-    private StringWriter outBuffer = new StringWriter();
+    private final StringWriter outBuffer = new StringWriter();
 
     public RunEnvironment() {
         out = new PrintWriter(outBuffer);

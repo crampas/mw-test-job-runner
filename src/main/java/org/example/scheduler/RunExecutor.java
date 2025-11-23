@@ -7,9 +7,9 @@ import java.util.concurrent.*;
 
 @Slf4j
 public class RunExecutor<DATA> {
-    private ExecutorService executor = Executors.newFixedThreadPool(1);
+    private final ExecutorService executor = Executors.newFixedThreadPool(1);
 
-    public CompletableFuture<RunResult<DATA>> schedule(Run run) {
+    public CompletableFuture<RunResult<DATA>> schedule(Run<?, DATA> run) {
         return CompletableFuture.supplyAsync(run::run, executor);
     }
 

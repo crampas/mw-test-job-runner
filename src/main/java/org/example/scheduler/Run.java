@@ -25,7 +25,7 @@ public abstract class Run<PARAMS, DATA> {
     @Getter
     private Instant endTimestamp;
     @Getter
-    private PARAMS params;
+    private final PARAMS params;
     @Getter
     private DATA data;
     @Getter
@@ -43,10 +43,10 @@ public abstract class Run<PARAMS, DATA> {
     /**
      * Schedules this run at the given executor.
      * Does some preparations and calls RunExecutor.schedule().
-     * @param executor the executer which schedules the run execution
+     * @param executor the executor which schedules the run execution
      * @return Future object with result.
      */
-    public final CompletableFuture<RunResult<DATA>> schedule(RunExecutor executor) {
+    public final CompletableFuture<RunResult<DATA>> schedule(RunExecutor<DATA> executor) {
         state = RunState.SCHEDULED;
         log.info("run {} scheduled", id);
         return executor.schedule(this);
@@ -56,7 +56,7 @@ public abstract class Run<PARAMS, DATA> {
      * Called by the executor thread of RunExecutor.
      * @return the RunResult returned by execute()
      */
-    public final RunResult run() {
+    public final RunResult<DATA> run() {
         try {
             state = RunState.RUNNING;
             startTimestamp = Instant.now();
@@ -78,7 +78,7 @@ public abstract class Run<PARAMS, DATA> {
             log.info("run {} completed with {} in {}",
                     id, resultState, Duration.between(startTimestamp, endTimestamp));
         }
-        return new RunResult()
+        return new RunResult<DATA>()
                 .setState(resultState)
                 .setData(data);
     }

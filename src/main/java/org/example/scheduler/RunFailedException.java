@@ -4,7 +4,7 @@ import lombok.Getter;
 
 public class RunFailedException extends RuntimeException {
     @Getter
-    private Object data;
+    private final Object data;
 
     public RunFailedException(String message, Object data) {
         super(message);

@@ -7,14 +7,14 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 /**
- * Defines a executable task definition.
+ * Defines an executable task definition.
  * Must be subclassed to define functionality.
  * @param <PARAMS> input type
- * @param <DATA> output tyoe
+ * @param <DATA> output type
  */
 @Getter
 public abstract class Job<PARAMS, DATA> {
-    protected final List<Run> runs = new ArrayList<>();
+    protected final List<Run<PARAMS, DATA>> runs = new ArrayList<>();
     protected final RunExecutor<DATA> executor;
     protected int runNumber = 0;
 
@@ -29,7 +29,7 @@ public abstract class Job<PARAMS, DATA> {
      */
     public final CompletableFuture<RunResult<DATA>> submit(PARAMS params) {
         String runId = this.getClass().getCanonicalName() + "-" + (++runNumber);
-        Run<PARAMS, DATA> run = new Run<PARAMS, DATA>(runId, params) {
+        Run<PARAMS, DATA> run = new Run<>(runId, params) {
             @Override
             public DATA execute() throws Exception {
                 return Job.this.execute(getEnvironment(), getParams());
@@ -41,7 +41,7 @@ public abstract class Job<PARAMS, DATA> {
 
     /**
      * Task implementation.
-     * This function is called with the exeturor worker thread.
+     * This function is called with the executor worker thread.
      * @param params input params
      * @return result data
      * @throws Exception allow any exception

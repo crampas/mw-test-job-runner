@@ -8,5 +8,5 @@ import java.util.List;
 
 @Getter
 public class JMeterBatchData {
-    private List<RunResult<JMeterTestData>> results = new ArrayList<>();
+    private final List<RunResult<JMeterTestData>> results = new ArrayList<>();
 }

@@ -11,7 +11,7 @@ import java.util.concurrent.CompletableFuture;
 
 @Slf4j
 public class JMeterBatchJob extends Job<JMeterBatchParams, JMeterBatchData> {
-    private JMeterTestJob testJob;
+    private final JMeterTestJob testJob;
 
     public JMeterBatchJob(JMeterTestJob testJob) {
         this.testJob = testJob;
@@ -27,7 +27,7 @@ public class JMeterBatchJob extends Job<JMeterBatchParams, JMeterBatchData> {
         env.log.info("das erste log {} mit daten", 22, new RuntimeException("test"));
 
         List<RunResult<JMeterTestData>> results = futures.stream()
-                .map(item -> item.join())
+                .map(CompletableFuture::join)
                 .toList();
         JMeterBatchData data = new JMeterBatchData();
         data.getResults().addAll(results);
