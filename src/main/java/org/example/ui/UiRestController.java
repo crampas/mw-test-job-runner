@@ -25,6 +25,7 @@ public class UiRestController {
     private final SchedulerService schedulerService;
     private Template jobsTemplate;
     private Template jobTemplate;
+    private Template jobRunsTemplate;
     private Template runTemplate;
 
     @SneakyThrows
@@ -33,6 +34,7 @@ public class UiRestController {
         Handlebars handlerBars = new Handlebars();
         jobsTemplate = handlerBars.compile("templates/jobs");
         jobTemplate = handlerBars.compile("templates/job");
+        jobRunsTemplate = handlerBars.compile("templates/job.runs");
         runTemplate = handlerBars.compile("templates/run");
     }
 
@@ -43,9 +45,21 @@ public class UiRestController {
     }
 
     @GetMapping("/job/{jobName}.html")
-    public String viewJobRuns(@PathVariable String jobName) throws Exception {
+    public String viewJob(@PathVariable String jobName) throws Exception {
         Job job = schedulerService.getJobByName(jobName).orElse(null);
         return jobTemplate.apply(Map.of("job", job));
+    }
+
+    @GetMapping("/job/{jobName}.html/job.runs.html")
+    public String viewJobRuns(@PathVariable String jobName) throws Exception {
+        Job job = schedulerService.getJobByName(jobName).orElse(null);
+        return jobRunsTemplate.apply(Map.of("job", job));
+    }
+
+    @GetMapping("/job/{jobName}.html/job.runs.hash")
+    public int viewJobRunsHash(@PathVariable String jobName) throws Exception {
+        Job job = schedulerService.getJobByName(jobName).orElse(null);
+        return jobRunsTemplate.apply(Map.of("job", job)).hashCode();
     }
 
     @GetMapping("/job/{jobName}/run/{runId}.html")

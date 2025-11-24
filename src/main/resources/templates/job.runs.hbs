@@ -1,0 +1,20 @@
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Run</th>
+      <th scope="col">State</th>
+      <th scope="col">Result</th>
+      <th scope="col">Started</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each job.runs}}
+    <tr>
+      <td><a href="/job/{{@../job.name}}/run/{{id}}.html">{{id}}</a></td>
+      <td>{{state}}</td>
+      <td>{{resultState}}</td>
+      <td>{{startTimestamp}}</td>
+    </tr>
+    {{/each}}
+  </tbody>
+</table>
